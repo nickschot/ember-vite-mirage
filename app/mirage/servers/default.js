@@ -1,6 +1,5 @@
 import { createConfig } from 'ember-mirage';
 import { importEmberDataModels } from 'ember-mirage/ember-data';
-import { getContext } from '@ember/test-helpers';
 import { pluralize, singularize } from 'ember-inflector';
 import { createServer } from 'miragejs';
 
@@ -13,11 +12,17 @@ const mirageConfig = await createConfig({
   identityManagers: import.meta.glob('../identity-managers/*'),
 });
 
-export function makeServer(config) {
+export async function makeServer(config, _store) {
   let { inflector, ...rest } = config;
 
-  let store = getContext().owner.lookup('service:store');
-  let server = createServer({
+  // Don't attempt to import from test-helpers when running in the app
+  let store =
+    _store ??
+    (await import('@ember/test-helpers'))
+      .getContext()
+      .owner.lookup('service:store');
+
+  return createServer({
     ...mirageConfig,
     ...rest,
 
@@ -44,16 +49,4 @@ export function makeServer(config) {
       });
     },
   });
-
-  // This only works after the server was created.
-  if (
-    typeof location !== 'undefined' &&
-    location.search.indexOf('mirageLogging') !== -1
-  ) {
-    server.logging = true;
-  } else {
-    server.logging = false;
-  }
-
-  return server;
 }

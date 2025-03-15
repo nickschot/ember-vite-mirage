@@ -2,6 +2,15 @@
 
 {{outlet}}
 
-{{! The following component displays Ember's default welcome message. }}
-<WelcomePage />
-{{! Feel free to remove this! }}
+<ul>
+{{#each @model as |user|}}
+  <li>
+    {{user.name}}
+      <ul>
+        {{#each user.comments as |comment|}}
+          <li>{{comment.id}}</li>
+        {{/each}}
+      </ul>
+  </li>
+{{/each}}
+</ul>

@@ -24,7 +24,8 @@ module('Unit | Mirage | smoke-tests', function (hooks) {
   test('it sets up the route-handlers, models, factories', async function (assert) {
     let { store, users } = await prepare(this, { withUsers: 2 });
 
-    this.server.create('user', { name: 'My custom name' });
+    let user = this.server.create('user', { name: 'My custom name' });
+    let comment = this.server.create('comment', { text: 'test comment', user });
 
     assert.strictEqual(users.length, 2);
 
