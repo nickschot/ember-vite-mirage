@@ -3,7 +3,7 @@ import { importEmberDataModels } from 'ember-mirage/ember-data';
 import { pluralize, singularize } from 'ember-inflector';
 import { createServer } from 'miragejs';
 
-const emberDataModels = import.meta.glob('../../models/**/*');
+const emberDataModels = import.meta.glob('../../app/models/**/*');
 const mirageConfig = await createConfig({
   factories: import.meta.glob('../factories/*'),
   fixtures: import.meta.glob('../fixtures/*'),
@@ -44,9 +44,7 @@ export async function makeServer(config, _store) {
     },
 
     routes() {
-      this.get('users', function (schema) {
-        return schema.users.all();
-      });
+      this.resource('users');
     },
   });
 }

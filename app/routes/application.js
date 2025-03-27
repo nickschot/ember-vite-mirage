@@ -1,5 +1,5 @@
 import Route from '@ember/routing/route';
-import { isDevelopingApp, macroCondition } from '@embroider/macros';
+import { isDevelopingApp, isTesting, macroCondition } from '@embroider/macros';
 import { service } from '@ember/service';
 import config from '../config/environment';
 
@@ -7,13 +7,15 @@ export default class ApplicationRoute extends Route {
   @service store;
 
   async beforeModel() {
-    if (macroCondition(isDevelopingApp())) {
+    if (macroCondition(isDevelopingApp() && !isTesting())) {
       if (config.useMirage) {
-        let { makeServer } = await import('../mirage/servers/default');
+        let { makeServer } = await import(
+          'ember-vite-mirage/mirage/servers/default'
+        );
         let server = await makeServer(
           {
             environment: 'development',
-            scenarios: await import('../mirage/scenarios'),
+            scenarios: await import('ember-vite-mirage/mirage/scenarios'),
           },
           this.store,
         );

@@ -1,5 +1,5 @@
 import { setupMirage as _setupMirage } from 'ember-mirage/test-support';
-import { makeServer } from '../../app/mirage/servers/default';
+import { makeServer } from 'ember-vite-mirage/mirage/servers/default';
 
 export function setupMirage(hooks, options) {
   options = options || {};
@@ -27,7 +27,7 @@ export function setupMirage(hooks, options) {
           assert.pushResult({
             result: false,
             expected: '',
-            actual: error.message,
+            actual: error.stack,
             message:
               'Error in Mirage request handler. See console for details.',
           });
